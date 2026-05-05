@@ -1,10 +1,10 @@
 export const SITE = {
-  website: "https://e-know.github.io/tobydev/", // replace this with your deployed domain
+  website: "https://e-know.github.io/tobydev/",
   author: "Inho Choi",
   profile: "https://github.com/E-know",
   desc: "iOS와 프론트엔드 개발 경험을 기록하는 Toby의 개발 블로그입니다.",
   title: "Toby의 개발 블로그",
-  ogImage: "astropaper-og.jpg",
+  ogImage: undefined,
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,

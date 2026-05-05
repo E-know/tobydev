@@ -1,3 +1,26 @@
+# Project Cleanup and Verification
+
+## Checklist
+
+- [x] Inspect tracked and generated files for safe cleanup candidates.
+- [x] Remove only files/config that are unused or generated and do not change intended site behavior.
+- [x] Re-run format/lint/build checks after cleanup.
+- [x] Start a local preview/dev server and verify the site opens in a browser.
+- [x] Record evidence, risks, and final result.
+
+## Review
+
+- Removed AstroPaper template/demo material from the active blog: sample posts, release notes, demo images, upstream changelog/Lighthouse asset, and GitHub issue/community templates. The live collection now contains only `src/data/blog/2026-05-03-hello-world.md`.
+- Removed stale npm-incompatible config: `pnpm-workspace.yaml` and `cz.yaml`.
+- Kept Docker support but made it consistent with npm by using `package-lock.json`, `npm ci`, and `npm run build`; fixed `.dockerignore` so `.astro` source files are no longer excluded.
+- Replaced the template README with a concise project README and renamed the package to `tobydev-blog`.
+- Removed generated/local clutter before the fresh build: `.astro`, `dist`, `public/pagefind`, and all `.DS_Store` files. `npm run build` regenerated `dist` and `public/pagefind`.
+- Verification passed: `npm run format:check`, `npm run lint`, and `npm run build`.
+- The first sandboxed build failed only because Google Fonts network access was blocked during OG image generation; rerunning `npm run build` with network permission completed successfully.
+- Opened `http://127.0.0.1:4321/tobydev/` in the in-app browser. Verified the homepage title and heading, one visible post link, no visible `AstroPaper` text, and zero console errors.
+- Opened `http://127.0.0.1:4321/tobydev/posts/2026-05-03-hello-world/`. Verified the post heading, Swift code block text, and zero console errors.
+- Opened `http://127.0.0.1:4321/tobydev/search/`. Verified the Search page, search input, and zero console errors.
+
 # GitHub Pages Layout Fix
 
 ## Checklist
