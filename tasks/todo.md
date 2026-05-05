@@ -54,3 +54,19 @@
 - Replaced the homepage and About page AstroPaper template copy with Korean blog-specific content.
 - Verified generated output: home/search/post pages use `lang="ko"`; post pages include `BlogPosting`; search has `noindex, follow`; robots points to the project sitemap; sitemap URLs use `https://e-know.github.io/tobydev/` and exclude `/search/`.
 - Full verification passes: `npm run format:check`, `npm run lint`, and `npm run build`.
+
+# Pull Request to main
+
+## Checklist
+
+- [x] Confirm current branch, remote, and working tree state.
+- [ ] Refresh remote refs and confirm `codex/initSetting` is based against latest `main`.
+- [ ] Inspect branch diff and commit summary for PR title/body.
+- [ ] Create a pull request from `codex/initSetting` into `main`.
+- [ ] Record PR URL and final verification result.
+
+## Review
+
+- Current branch is `codex/initSetting`, tracking `origin/codex/initSetting`.
+- Local working tree was clean before PR preparation.
+- Local comparison shows one commit on the branch ahead of `main`: `8deb47f` (`🔧 chore: 현재 작업 상태 정리`).
