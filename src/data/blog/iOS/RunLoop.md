@@ -1,11 +1,11 @@
 ---
-title: “RunLoop"
-description: “Deep dive into RunLoop"
+title: "RunLoop"
+description: "Deep dive into RunLoop"
 pubDatetime: 2026-05-05T19:32:00Z
-tags: ["iOS", “RunLoop", “Swift"]
+tags: ["iOS", "RunLoop", "Swift"]
 category: "iOS"
 lang: "ko"
-timezone: “Asia/Seoul"
+timezone: "Asia/Seoul"
 ---
 
 ## Table of contents
@@ -13,6 +13,7 @@ timezone: “Asia/Seoul"
 # RunLoop
 
 ## RunLoop란 무엇인가?
+
 RunLoop는 `Run(Event)`을 처리하기 위해 계속 돌아가는 `Loop`다.
 
 **왜 계속 돌아가야 할까?**
@@ -29,6 +30,7 @@ RunLoop는 처리할 이벤트가 있으면 스레드를 깨워서(`종료된걸
 - 여기서 스레드의 여러 형태가 나오는데 단어마다 느낌이 조금씩 다르니 유의.
 
 ## 메인 스레드의 RunLoop는 알겠는데 다른 스레드는?
+
 RunLoop는 스레드당 1개를 가질 수 있고 명시하지 않으면 (코드로 언급하는 것) 생성되지 않음.
 
 엥 그럼 메인 스레드는?
@@ -45,7 +47,7 @@ RunLoop는 스레드당 1개를 가질 수 있고 명시하지 않으면 (코드
 
 모두 스레드를 Idle 상태로 만들어서 관리하는 것은 맞으나
 
-GCD는 요청대로 생성하여서 스레드 폭발이 일어나지만 
+GCD는 요청대로 생성하여서 스레드 폭발이 일어나지만
 
 Swift Concurrency는 실제 운용할 수 있는 코어 수 만큼만 만들어서 관리함.
 
@@ -53,13 +55,14 @@ Swift Concurrency는 실제 운용할 수 있는 코어 수 만큼만 만들어�
 
 RunLoop는 화면을 직접 그리지 않음.
 
-다만 RunLoop가 한 번순회를 돌면서 변경사항을 모아서 한번에 
+다만 RunLoop가 한 번순회를 돌면서 변경사항을 모아서 한번에
 
 `코어 애니메이션`에 넘겨서 그리도록 명령함. (이걸 commit이라고 함)
 
 그럼 그려야할 부분을 어떻게 암? -> 다시 그려야 하는 부분에 깃발을 꽂아둬서 기억함.
 
 ## 살짝 깊게 들어가보자
+
 Main Thread는 종료되지 않는다. 다만 Sleep 잠들 뿐
 
 그럼 언제 commit이 이뤄질까?
@@ -73,18 +76,22 @@ UI Update Cycle을 돎.
 UI Update Cycle을 순회해야 RunLoop가 Sleep됨.
 
 ## UI Update Cycle
+
 1. Layout
+
 - 깃발이 꽂힌 뷰를 찾아 layoutSubViews를 호출한다 여기서 AutoLayout 제약 조건이 계산되고
-View의 최종 frame과 bounds가 계산됨.
+  View의 최종 frame과 bounds가 계산됨.
+
 2. Display
-  깃발이 꽂힌 뷰들의 draw 메소드가 호출된다. (단 직접 )
+   깃발이 꽂힌 뷰들의 draw 메소드가 호출된다. (단 직접 )
 3. Prepare
-  이미지 디코딩이나 포맷 변화 등 GPU 렌더링 전 필요 조치
+   이미지 디코딩이나 포맷 변화 등 GPU 렌더링 전 필요 조치
 4. Commit
-  계산이 완료된 뷰 계층 구조를 직렬화하여 앱 프로세스를 벗어나 Render Server로 전송
-Render Server는 별도의 시스템 프로세스다.
+   계산이 완료된 뷰 계층 구조를 직렬화하여 앱 프로세스를 벗어나 Render Server로 전송
+   Render Server는 별도의 시스템 프로세스다.
 
 ## layoutIfNeeded, setNeedsLayout
+
 우리가 흔히 layoutIfNeed는 즉시 UI업데이트를 요청한다.
 
 setNeedsLayout은 다음 UI업데이트 때 UI업데이트를 요청한다. 라고 안다.
@@ -110,6 +117,7 @@ B에서 layoutIfNeeded를 호출 했다는 것은 B에 layoutSubViews를 호출�
 이는 B와 B의 자식 View의 깃발만 UI Update Cycle에 태운다는 걸 의미함.
 
 ## setNeedsLayout은 그럼 왜 필요할까?
+
 그럼 어짜피 UIUpdate는 자동으로 깃발을 꽂아주는데 왜 setNeedsLayout이 필요할까?
 
 이는 특정 변수가 바뀌었을 때에 화면의 배치가 달리지는 경우 시스템은 이를 알지를 못함.
@@ -118,19 +126,19 @@ B에서 layoutIfNeeded를 호출 했다는 것은 B에 layoutSubViews를 호출�
 
 ```swift
 class ExpandableProfileView: UIView {
-    
+
     // 1. 커스텀 상태 프로퍼티
     var isExpanded: Bool = false {
         didSet {
             // 값이 변경되었을 때, 뷰의 UI 업데이트가 필요하다면?
             // 시스템은 isExpanded가 레이아웃을 바꾸는지 모르기 때문에 수동으로 호출해야 합니다.
-            setNeedsLayout() 
+            setNeedsLayout()
         }
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
         // 2. isExpanded 상태에 따라 서브뷰들의 프레임을 직접 분기 처리하여 계산
         if isExpanded {
             descriptionLabel.frame = CGRect(x: 0, y: 50, width: bounds.width, height: 100)
@@ -142,6 +150,7 @@ class ExpandableProfileView: UIView {
 ```
 
 ## layoutSubView의 호출의 의미
+
 UI Update Cycle를 순회한다는 것은 layoutSubView 함수를 호출한다는 것임
 
 layoutSubView는 Top-down 방식임.
@@ -149,6 +158,7 @@ layoutSubView는 Top-down 방식임.
 부모 View에서 자식 View의 frame를 결정하고 또 그 자식의 View를 결정하는 방식임.
 
 ### 자식 View frame을 어떻게 앎? - AutoLayout Render Loop
+
 자식의 View의 frame은 어떻게 측정할까?
 
 여기서 등장하는게 AutoLayout Render Loop 임.
@@ -169,4 +179,5 @@ layoutSubView는 Top-down 방식임.
    - 실제로 draw를 override 하고 빈 함수만 구현해도 무겁게 작업함
 
 # 정리
+
 그렇게 Main RunLoop는 돌면서 깃발을 꽂고 Commit하여 GPU의 도움을 받아서 동작한다.

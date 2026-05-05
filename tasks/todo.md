@@ -102,3 +102,21 @@
 - Root cause is `.github/workflows/ci.yml` using pnpm setup/cache/install commands in an npm project.
 - Updated CI to use `actions/setup-node` with `cache: "npm"` and `npm ci` / `npm run ...` commands.
 - Verified locally with `npm ci`, `npm run format:check`, `npm run lint`, and `npm run build`. The first sandboxed build failed only on Google Fonts DNS access; rerunning with network permission passed.
+
+# Fix RunLoop Timezone Build Failure
+
+## Checklist
+
+- [x] Inspect the failing CI route and `Datetime` timezone usage.
+- [x] Normalize malformed smart quotes in RunLoop frontmatter.
+- [x] Search for any remaining malformed timezone/frontmatter values.
+- [x] Run the same build command path that failed in CI.
+- [x] Record root cause and verification results.
+
+## Review
+
+- Root cause: `src/data/blog/iOS/RunLoop.md` used smart quotes around frontmatter values, including `timezone: “Asia/Seoul"`. The parsed value was not the valid IANA timezone string `Asia/Seoul`, so `Date.toLocaleString` failed during static generation.
+- Normalized `title`, `description`, `tags`, and `timezone` frontmatter to plain quoted YAML strings in both `src/data/blog/iOS/RunLoop.md` and the duplicate `src/RunLoop.md` copy.
+- Confirmed no remaining smart quotes in Markdown/Astro content with `rg -n "[“”]" src tasks --glob '*.md' --glob '*.mdx' --glob '*.astro'`.
+- `npm run build` passes after the fix. The first sandboxed build failed only because OG image generation could not reach `fonts.googleapis.com`; rerunning with network access completed `astro check`, `astro build`, Pagefind indexing, and the `public/pagefind` copy.
+- `npm run format:check` passes.
