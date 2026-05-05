@@ -120,3 +120,20 @@
 - Confirmed no remaining smart quotes in Markdown/Astro content with `rg -n "[“”]" src tasks --glob '*.md' --glob '*.mdx' --glob '*.astro'`.
 - `npm run build` passes after the fix. The first sandboxed build failed only because OG image generation could not reach `fonts.googleapis.com`; rerunning with network access completed `astro check`, `astro build`, Pagefind indexing, and the `public/pagefind` copy.
 - `npm run format:check` passes.
+
+# Make RunLoop Visible In Listings
+
+## Checklist
+
+- [x] Inspect post listing filters and RunLoop frontmatter.
+- [x] Change RunLoop publish timestamp from UTC future time to KST local time.
+- [x] Verify the generated Posts listing includes RunLoop.
+- [x] Record root cause and verification results.
+
+## Review
+
+- Root cause: `pubDatetime: 2026-05-05T19:32:00Z` meant `2026-05-06 04:32 KST`, not `2026-05-05 19:32 KST`. `postFilter` hides future posts outside dev mode, so RunLoop was filtered out of Home, Posts, Tags, and RSS listings.
+- Changed RunLoop frontmatter to `pubDatetime: 2026-05-05T19:32:00+09:00` in both `src/data/blog/iOS/RunLoop.md` and the duplicate `src/RunLoop.md` copy.
+- Verified `npm run build` passes and generated output now includes RunLoop in `dist/index.html`, `dist/posts/index.html`, `dist/tags/index.html`, `dist/tags/runloop/index.html`, `dist/rss.xml`, and `dist/sitemap-0.xml`.
+- Verified `npx astro check` passes with 0 errors, 0 warnings, and 0 hints.
+- Verified `npx prettier --check src/data/blog/iOS/RunLoop.md src/RunLoop.md tasks/todo.md` passes.

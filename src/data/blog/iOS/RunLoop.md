@@ -1,7 +1,7 @@
 ---
 title: "RunLoop"
 description: "Deep dive into RunLoop"
-pubDatetime: 2026-05-05T19:32:00Z
+pubDatetime: 2026-05-05T19:32:00+09:00
 tags: ["iOS", "RunLoop", "Swift"]
 category: "iOS"
 lang: "ko"
