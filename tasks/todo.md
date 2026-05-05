@@ -137,3 +137,24 @@
 - Verified `npm run build` passes and generated output now includes RunLoop in `dist/index.html`, `dist/posts/index.html`, `dist/tags/index.html`, `dist/tags/runloop/index.html`, `dist/rss.xml`, and `dist/sitemap-0.xml`.
 - Verified `npx astro check` passes with 0 errors, 0 warnings, and 0 hints.
 - Verified `npx prettier --check src/data/blog/iOS/RunLoop.md src/RunLoop.md tasks/todo.md` passes.
+
+# Commit Blog Content Changes
+
+## Checklist
+
+- [x] Inspect untracked blog content and classify atomic commit groups.
+- [x] Fix any content metadata that would break Astro content parsing or rendering.
+- [x] Run format, lint, and build verification before committing.
+- [x] Stage only related files for each commit.
+- [x] Create Korean conventional commits with the commit skill format.
+- [x] Record final commit hashes and verification results.
+
+## Review
+
+- Classified the changes into separate content commits: the published iOS image/downsampling post and the reusable draft blog template.
+- Normalized malformed smart quotes in `src/data/blog/iOS/Image와 DownSampling.md` frontmatter so Astro parses title, description, and tags correctly.
+- Changed the YouTube reference in the image/downsampling post from image syntax to normal link syntax to avoid rendering a broken remote image.
+- Verification passed: `npm run format:check`, `npm run lint`, and `npm run build`.
+- The first `npm run build` failed only because sandboxed DNS could not reach `fonts.googleapis.com`; rerunning with network access passed.
+- Cleared stale Astro content cache with `npx astro sync --force` after a local duplicate content ID warning, then verified a clean rebuild with no Astro warnings.
+- Created content commits `efcd227` (`📝 docs: 이미지 다운샘플링 글 추가`) and `0ed948e` (`📝 docs: 블로그 글 템플릿 추가`).
