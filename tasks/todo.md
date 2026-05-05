@@ -60,8 +60,13 @@
 ## Checklist
 
 - [x] Confirm current branch, remote, and working tree state.
-- [ ] Refresh remote refs and confirm `codex/initSetting` is based against latest `main`.
-- [ ] Inspect branch diff and commit summary for PR title/body.
+- [x] Refresh remote refs and confirm `codex/initSetting` is based against latest `main`.
+- [x] Inspect branch diff and commit summary for PR title/body.
+- [x] Re-plan after confirming this project uses npm and `package-lock.json`.
+- [x] Remove mistaken local pnpm artifacts created during investigation.
+- [x] Update CI from pnpm commands/cache to npm commands/cache.
+- [x] Run local verification with npm: `npm ci`, `npm run format:check`, `npm run lint`, and `npm run build`.
+- [ ] Commit and push the CI package-manager fix to `codex/initSetting`.
 - [ ] Create a pull request from `codex/initSetting` into `main`.
 - [ ] Record PR URL and final verification result.
 
@@ -70,3 +75,7 @@
 - Current branch is `codex/initSetting`, tracking `origin/codex/initSetting`.
 - Local working tree was clean before PR preparation.
 - Local comparison shows one commit on the branch ahead of `main`: `8deb47f` (`🔧 chore: 현재 작업 상태 정리`).
+- CI reported `Dependencies lock file is not found ... Supported file patterns: pnpm-lock.yaml`, but this project uses npm: `package-lock.json` exists and deploy already runs `npm ci`.
+- Root cause is `.github/workflows/ci.yml` using pnpm setup/cache/install commands in an npm project.
+- Updated CI to use `actions/setup-node` with `cache: "npm"` and `npm ci` / `npm run ...` commands.
+- Verified locally with `npm ci`, `npm run format:check`, `npm run lint`, and `npm run build`. The first sandboxed build failed only on Google Fonts DNS access; rerunning with network permission passed.
