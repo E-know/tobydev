@@ -13,9 +13,12 @@ const posts = await getCollection("blog");
 let tags = getUniqueTags(posts);
 ---
 
-<Layout title={`Tags | ${SITE.title}`}>
+<Layout
+  title={`Tags | ${SITE.title}`}
+  description="Toby의 개발 블로그 글을 주제별 태그로 탐색하는 페이지입니다."
+>
   <Header />
-  <Main pageTitle="Tags" pageDesc="All the tags used in posts.">
+  <Main pageTitle="Tags" pageDesc="글에 사용된 모든 태그를 모았습니다.">
     <ul class="flex flex-wrap gap-6">
       {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} />)}
     </ul>

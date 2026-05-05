@@ -3,7 +3,7 @@ import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
 import { SITE } from "@/config";
-import { withBase } from "@/utils/basePath";
+import { stripBase, withBase } from "@/utils/basePath";
 import "@/styles/global.css";
 
 type Props = {
@@ -12,9 +12,12 @@ type Props = {
   profile?: string;
   description?: string;
   ogImage?: string;
-  canonicalURL?: string;
+  canonicalURL?: string | URL;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  tags?: string[];
+  pageType?: "website" | "article";
+  noindex?: boolean;
   scrollSmooth?: boolean;
 };
 
@@ -24,42 +27,68 @@ const {
   profile = SITE.profile,
   description = SITE.desc,
   ogImage = SITE.ogImage ? withBase(SITE.ogImage) : withBase("og.png"),
-  canonicalURL = new URL(Astro.url.pathname, Astro.url),
+  canonicalURL,
   pubDatetime,
   modDatetime,
+  tags = [],
+  pageType = "website",
+  noindex = false,
   scrollSmooth = false,
 } = Astro.props;
 
-const socialImageURL = new URL(ogImage, Astro.url);
+const canonicalURLObject = canonicalURL
+  ? new URL(canonicalURL, SITE.website)
+  : new URL(withBase(stripBase(Astro.url.pathname)), SITE.website);
+const socialImageURL = new URL(ogImage, SITE.website);
+const isArticle = pageType === "article" && pubDatetime;
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: `${title}`,
-  image: `${socialImageURL}`,
-  datePublished: `${pubDatetime?.toISOString()}`,
-  ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: `${author}`,
-      ...(profile && { url: profile }),
-    },
-  ],
+const publisher = {
+  "@type": "Person",
+  name: author,
+  ...(profile && { url: profile }),
 };
+
+const structuredData = isArticle
+  ? {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: title,
+      description,
+      url: canonicalURLObject.href,
+      mainEntityOfPage: canonicalURLObject.href,
+      image: socialImageURL.href,
+      datePublished: pubDatetime.toISOString(),
+      ...(modDatetime && { dateModified: modDatetime.toISOString() }),
+      ...(tags.length > 0 && { keywords: tags.join(", ") }),
+      author: publisher,
+    }
+  : {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: canonicalURLObject.href,
+      inLanguage: SITE.lang,
+      isPartOf: {
+        "@type": "WebSite",
+        name: SITE.title,
+        url: SITE.website,
+      },
+      author: publisher,
+    };
 ---
 
 <!doctype html>
 <html
   dir={SITE.dir}
-  lang=`${SITE.lang ?? "en"}`
-  class={`${scrollSmooth && "scroll-smooth"}`}
+  lang={SITE.lang ?? "en"}
+  class:list={{ "scroll-smooth": scrollSmooth }}
 >
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
-    <link rel="canonical" href={canonicalURL} />
+    <link rel="canonical" href={canonicalURLObject.href} />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Load Font -->
@@ -73,13 +102,17 @@ const structuredData = {
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="sitemap" href={withBase("sitemap-index.xml")} />
 
     <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={isArticle ? "article" : "website"} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:locale" content="ko_KR" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:url" content={canonicalURLObject.href} />
+    <meta property="og:image" content={socialImageURL.href} />
 
     <!-- Article Published/Modified time -->
     {
@@ -101,10 +134,10 @@ const structuredData = {
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:url" content={canonicalURLObject.href} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={socialImageURL} />
+    <meta property="twitter:image" content={socialImageURL.href} />
 
     <!-- Google JSON-LD Structured data -->
     <script
@@ -119,7 +152,7 @@ const structuredData = {
       rel="alternate"
       type="application/rss+xml"
       title={SITE.title}
-      href={new URL(withBase("rss.xml"), Astro.site)}
+      href={new URL(withBase("rss.xml"), SITE.website)}
     />
 
     <meta name="theme-color" content="" />

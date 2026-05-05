@@ -10,9 +10,13 @@ import { withBase } from "@/utils/basePath";
 const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : withBase("/");
 ---
 
-<Layout title={`Search | ${SITE.title}`}>
+<Layout
+  title={`Search | ${SITE.title}`}
+  description="Toby의 개발 블로그 글을 검색하는 페이지입니다."
+  noindex
+>
   <Header />
-  <Main pageTitle="Search" pageDesc="Search any article ...">
+  <Main pageTitle="Search" pageDesc="블로그 글을 검색해보세요.">
     <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
   </Main>
   <Footer />

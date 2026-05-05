@@ -3,35 +3,22 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+안녕하세요. Toby의 개발 블로그를 운영하는 Inho Choi입니다.
 
-![Astro Paper](public/astropaper-og.jpg)
+이 블로그는 iOS와 프론트엔드 개발을 하며 배운 내용을 기록하고, 다시 꺼내 보기 좋은 형태로 정리하기 위해 만들었습니다.
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+주로 Swift, iOS 앱 개발, 웹 프론트엔드, 개발 환경 구성, 문제 해결 과정을 다룹니다. 단순한 결과보다 왜 그런 선택을 했는지, 어떤 시행착오가 있었는지를 함께 남기려고 합니다.
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+## 다루는 주제
 
-## Features
+- iOS와 Swift 개발
+- Astro와 프론트엔드 개발
+- GitHub Pages 기반 정적 사이트 운영
+- 개발 중 마주친 오류와 해결 과정
+- 공부한 내용을 오래 남기기 위한 기술 노트
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+## 블로그 방향
 
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
+검색으로 들어온 사람도 바로 맥락을 이해할 수 있도록, 각 글은 문제 상황과 해결 방법을 함께 담는 것을 목표로 합니다. 작은 기록이라도 나중에 같은 문제를 만났을 때 다시 쓸 수 있는 글로 다듬어가겠습니다.
 
-and so much more.
-
-## Show your support
-
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
-
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
-
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
-
-Kyay zuu! 🙏🏼
+코드는 [GitHub](https://github.com/E-know)에서 확인할 수 있습니다.

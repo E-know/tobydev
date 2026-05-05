@@ -9,9 +9,11 @@ import { SITE } from "@/config";
 type Props = MarkdownLayoutProps<{ title: string }>;
 
 const { frontmatter } = Astro.props;
+const description =
+  "Toby의 개발 블로그 소개와 iOS, Swift, 프론트엔드 개발 기록의 방향을 정리한 페이지입니다.";
 ---
 
-<Layout title={`${frontmatter.title} | ${SITE.title}`}>
+<Layout title={`${frontmatter.title} | ${SITE.title}`} {description}>
   <Header />
   <Breadcrumb />
   <main id="main-content" class="app-layout">

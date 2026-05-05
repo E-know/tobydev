@@ -31,9 +31,12 @@ const months = [
 ];
 ---
 
-<Layout title={`Archives | ${SITE.title}`}>
+<Layout
+  title={`Archives | ${SITE.title}`}
+  description="Toby의 개발 블로그 글을 연도와 월별로 모아보는 아카이브입니다."
+>
   <Header />
-  <Main pageTitle="Archives" pageDesc="All the articles I've archived.">
+  <Main pageTitle="Archives" pageDesc="발행한 글을 연도와 월별로 모았습니다.">
     {
       Object.entries(
         getPostsByGroupCondition(posts, post =>

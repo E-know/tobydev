@@ -31,7 +31,7 @@ const homePath = withBase("/");
   >
     <section id="hero" class:list={["pt-8 pb-6", "border-b border-border"]}>
       <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Mingalaba
+        Toby의 개발 블로그
       </h1>
       <a
         target="_blank"
@@ -49,19 +49,17 @@ const homePath = withBase("/");
       </a>
 
       <p>
-        AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro
-        blog theme. This theme follows best practices and provides accessibility
-        out of the box. Light and dark mode are supported by default. Moreover,
-        additional color schemes can also be configured.
+        iOS, Swift, 프론트엔드 개발을 하며 배운 것과 시행착오를 기록합니다.
+        실무에서 다시 꺼내 보기 좋은 개발 노트를 차곡차곡 정리합니다.
       </p>
       <p class="mt-2">
-        Read the blog posts or check
+        최근 글을 읽거나
         <LinkButton
           class="underline decoration-dashed underline-offset-4 hover:text-accent"
-          href="https://github.com/satnaing/astro-paper#readme"
+          href={withBase("/posts/")}
         >
-          README
-        </LinkButton> for more info.
+          전체 글 목록
+        </LinkButton>에서 관심 있는 주제를 찾아보세요.
       </p>
       {
         // only display if at least one social link is enabled

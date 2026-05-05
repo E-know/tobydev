@@ -21,7 +21,11 @@ export default defineConfig({
   base,
   integrations: [
     sitemap({
-      filter: page => SITE.showArchives || !page.endsWith("/archives"),
+      filter: page => {
+        const url = new URL(page);
+        if (url.pathname.endsWith("/search/")) return false;
+        return SITE.showArchives || !url.pathname.endsWith("/archives/");
+      },
     }),
   ],
   markdown: {
