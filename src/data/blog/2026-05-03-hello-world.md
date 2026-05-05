@@ -17,7 +17,7 @@ Swift 코드 블록은 자동으로 syntax highlight됩니다.
 @MainActor
 final class ProductFilterStore {
     private(set) var filters: [Filter] = []
-    
+
     func update(_ newFilters: [Filter]) async {
         filters = newFilters
     }

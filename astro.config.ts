@@ -11,9 +11,14 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { SITE } from "./src/config";
 
+const site = new URL(SITE.website);
+const base =
+  site.pathname === "/" ? undefined : site.pathname.replace(/\/$/, "");
+
 // https://astro.build/config
 export default defineConfig({
-  site: SITE.website,
+  site: site.origin,
+  base,
   integrations: [
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
